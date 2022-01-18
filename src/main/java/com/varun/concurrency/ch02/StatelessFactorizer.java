@@ -1,8 +1,8 @@
 package com.varun.concurrency.ch02;
 
-import static com.varun.concurrency.ch02.Helper.encodeIntoResponse;
-import static com.varun.concurrency.ch02.Helper.extractFromRequest;
-import static com.varun.concurrency.ch02.Helper.factor;
+import static com.varun.concurrency.Helper.encodeIntoResponse;
+import static com.varun.concurrency.Helper.extractFromRequest;
+import static com.varun.concurrency.Helper.factor;
 
 import java.math.BigInteger;
 import net.jcip.annotations.ThreadSafe;
