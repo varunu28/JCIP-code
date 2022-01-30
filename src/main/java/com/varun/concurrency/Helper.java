@@ -21,4 +21,14 @@ public class Helper {
     today.set(Calendar.HOUR_OF_DAY, 0);
     return today.getTime();
   }
+
+  public static RuntimeException launderThrowable(Throwable t) {
+    if (t instanceof RuntimeException) {
+      return (RuntimeException) t;
+    } else if (t instanceof Error) {
+      throw (Error) t;
+    } else {
+      throw new IllegalStateException("Not unchecked", t);
+    }
+  }
 }
