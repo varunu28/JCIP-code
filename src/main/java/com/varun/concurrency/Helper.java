@@ -1,8 +1,13 @@
 package com.varun.concurrency;
 
+import com.varun.concurrency.ch06.renderer.ImageData;
+import com.varun.concurrency.ch06.renderer.ImageInfo;
 import java.math.BigInteger;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Helper {
 
@@ -30,5 +35,21 @@ public class Helper {
     } else {
       throw new IllegalStateException("Not unchecked", t);
     }
+  }
+
+  public static void handleRequest(Socket connection) {
+    System.out.println("Handling connection: " + connection);
+  }
+
+  public static void renderText(CharSequence source) {
+    System.out.println("Rendering source" + source);
+  }
+
+  public static List<ImageInfo> scanForImageInfo(CharSequence source) {
+    return new ArrayList<>();
+  }
+
+  public static void renderImage(ImageData imageData) {
+    System.out.println("Rendering image");
   }
 }
