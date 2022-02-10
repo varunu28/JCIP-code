@@ -52,4 +52,8 @@ public class Helper {
   public static void renderImage(ImageData imageData) {
     System.out.println("Rendering image");
   }
+
+  public static void processBuffer(byte[] bytes, int count) {
+    System.out.println("Processing buffer");
+  }
 }
