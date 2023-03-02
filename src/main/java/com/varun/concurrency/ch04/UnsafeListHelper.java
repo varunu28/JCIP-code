@@ -1,9 +1,10 @@
 package com.varun.concurrency.ch04;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.jcip.annotations.NotThreadSafe;
 
 /*
  * UnsafeListHelper is not thread-safe for putIfAbsent operation. The synchronized keyword gives an
@@ -20,13 +21,13 @@ import net.jcip.annotations.NotThreadSafe;
 @NotThreadSafe
 public class UnsafeListHelper<E> {
 
-  public List<E> list = Collections.synchronizedList(new ArrayList<>());
+    public List<E> list = Collections.synchronizedList(new ArrayList<>());
 
-  public synchronized boolean putIfAbsent(E x) {
-    boolean absent = !list.contains(x);
-    if (absent) {
-      list.add(x);
+    public synchronized boolean putIfAbsent(E x) {
+        boolean absent = !list.contains(x);
+        if (absent) {
+            list.add(x);
+        }
+        return absent;
     }
-    return absent;
-  }
 }

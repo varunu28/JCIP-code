@@ -1,9 +1,10 @@
 package com.varun.concurrency.ch04;
 
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.jcip.annotations.ThreadSafe;
 
 /*
  * This is a thread-safe implementation of putIfAbsent() functionality as now we acquire the same
@@ -18,15 +19,15 @@ import net.jcip.annotations.ThreadSafe;
  * */
 @ThreadSafe
 public class SafeListHelperByClientSideLocking<E> {
-  public List<E> list = Collections.synchronizedList(new ArrayList<>());
+    public List<E> list = Collections.synchronizedList(new ArrayList<>());
 
-  public boolean putIfAbsent(E x) {
-    synchronized (list) {
-      boolean absent = !list.contains(x);
-      if (absent) {
-        list.add(x);
-      }
-      return absent;
+    public boolean putIfAbsent(E x) {
+        synchronized (list) {
+            boolean absent = !list.contains(x);
+            if (absent) {
+                list.add(x);
+            }
+            return absent;
+        }
     }
-  }
 }

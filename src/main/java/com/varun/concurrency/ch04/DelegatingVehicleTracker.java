@@ -1,10 +1,11 @@
 package com.varun.concurrency.ch04;
 
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import net.jcip.annotations.ThreadSafe;
 
 /*
  * We moved away from MonitorVehicleTracker which holds all the responsibility to make the class
@@ -24,23 +25,23 @@ import net.jcip.annotations.ThreadSafe;
  * */
 @ThreadSafe
 public class DelegatingVehicleTracker {
-  private final ConcurrentMap<String, Point> locations;
+    private final ConcurrentMap<String, Point> locations;
 
-  public DelegatingVehicleTracker(Map<String, Point> points) {
-    this.locations = new ConcurrentHashMap(points);
-  }
-
-  public Map<String, Point> getLocations() {
-    return Collections.unmodifiableMap(this.locations);
-  }
-
-  public Point getLocation(String id) {
-    return this.locations.get(id);
-  }
-
-  public void setLocation(String id, int x, int y) {
-    if (locations.replace(id, new Point(x, y)) == null) {
-      throw new IllegalArgumentException("No such ID: " + id);
+    public DelegatingVehicleTracker(Map<String, Point> points) {
+        this.locations = new ConcurrentHashMap(points);
     }
-  }
+
+    public Map<String, Point> getLocations() {
+        return Collections.unmodifiableMap(this.locations);
+    }
+
+    public Point getLocation(String id) {
+        return this.locations.get(id);
+    }
+
+    public void setLocation(String id, int x, int y) {
+        if (locations.replace(id, new Point(x, y)) == null) {
+            throw new IllegalArgumentException("No such ID: " + id);
+        }
+    }
 }

@@ -1,13 +1,8 @@
 package com.varun.concurrency.ch05;
 
 import com.varun.concurrency.ch05.cache.Computable;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
+
+import java.util.concurrent.*;
 
 import static com.varun.concurrency.Helper.launderThrowable;
 
@@ -19,31 +14,33 @@ import static com.varun.concurrency.Helper.launderThrowable;
  * form of cache pollution.
  * */
 public class CorrectMemoizer<A, V> implements Computable<A, V> {
-  private final ConcurrentMap<A, Future<V>> cache = new ConcurrentHashMap<>();
-  private final Computable<A, V> c;
+    private final ConcurrentMap<A, Future<V>> cache = new ConcurrentHashMap<>();
+    private final Computable<A, V> c;
 
-  public CorrectMemoizer(Computable<A, V> c) {this.c = c;}
-
-  @Override
-  public V compute(A arg) throws InterruptedException, ExecutionException {
-    while (true) {
-      Future<V> f = this.cache.get(arg);
-      if (f == null) {
-        Callable<V> eval = () -> c.compute(arg);
-        FutureTask<V> ft = new FutureTask<V>(eval);
-        f = cache.putIfAbsent(arg, ft);
-        if (f == null) {
-          f = ft;
-          ft.run();
-        }
-      }
-      try {
-        return f.get();
-      } catch (CancellationException e) {
-        this.cache.remove(arg, f);
-      } catch (ExecutionException e) {
-        throw launderThrowable(e.getCause());
-      }
+    public CorrectMemoizer(Computable<A, V> c) {
+        this.c = c;
     }
-  }
+
+    @Override
+    public V compute(A arg) throws InterruptedException, ExecutionException {
+        while (true) {
+            Future<V> f = this.cache.get(arg);
+            if (f == null) {
+                Callable<V> eval = () -> c.compute(arg);
+                FutureTask<V> ft = new FutureTask<V>(eval);
+                f = cache.putIfAbsent(arg, ft);
+                if (f == null) {
+                    f = ft;
+                    ft.run();
+                }
+            }
+            try {
+                return f.get();
+            } catch (CancellationException e) {
+                this.cache.remove(arg, f);
+            } catch (ExecutionException e) {
+                throw launderThrowable(e.getCause());
+            }
+        }
+    }
 }

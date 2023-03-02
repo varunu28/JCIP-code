@@ -1,13 +1,12 @@
 package com.varun.concurrency.ch02;
 
-import static com.varun.concurrency.Helper.encodeIntoResponse;
-import static com.varun.concurrency.Helper.extractFromRequest;
-import static com.varun.concurrency.Helper.factor;
+import net.jcip.annotations.ThreadSafe;
 
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import net.jcip.annotations.ThreadSafe;
+
+import static com.varun.concurrency.Helper.*;
 
 /*
  * Use of synchronized keyword on the service method acquires a lock that can be held by at-most one
@@ -19,18 +18,18 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public class SynchronizedFactorizer {
 
-  private final AtomicReference<BigInteger> lastNumber = new AtomicReference<>();
-  private final AtomicReference<BigInteger[]> lastFactors = new AtomicReference<>();
+    private final AtomicReference<BigInteger> lastNumber = new AtomicReference<>();
+    private final AtomicReference<BigInteger[]> lastFactors = new AtomicReference<>();
 
-  public synchronized void service(String request, String response) {
-    BigInteger i = extractFromRequest(request);
-    if (Objects.requireNonNull(i).equals(lastNumber.get())) {
-      encodeIntoResponse(response, lastFactors.get());
-    } else {
-      BigInteger[] factors = factor(i);
-      lastNumber.set(i);
-      lastFactors.set(factors);
-      encodeIntoResponse(response, factors);
+    public synchronized void service(String request, String response) {
+        BigInteger i = extractFromRequest(request);
+        if (Objects.requireNonNull(i).equals(lastNumber.get())) {
+            encodeIntoResponse(response, lastFactors.get());
+        } else {
+            BigInteger[] factors = factor(i);
+            lastNumber.set(i);
+            lastFactors.set(factors);
+            encodeIntoResponse(response, factors);
+        }
     }
-  }
 }

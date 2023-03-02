@@ -13,26 +13,26 @@ import java.util.concurrent.LinkedBlockingDeque;
  * This pattern can be extended to multiple producer-consumers.
  * */
 public class IndexingService {
-  private final BlockingQueue<File> queue;
-  private final IndexerThread consumer;
-  private final CrawlerThread producer;
+    private final BlockingQueue<File> queue;
+    private final IndexerThread consumer;
+    private final CrawlerThread producer;
 
-  public IndexingService() {
-    this.queue = new LinkedBlockingDeque<>(10);
-    this.consumer = new IndexerThread(queue);
-    this.producer = new CrawlerThread(new File("root"), queue);
-  }
+    public IndexingService() {
+        this.queue = new LinkedBlockingDeque<>(10);
+        this.consumer = new IndexerThread(queue);
+        this.producer = new CrawlerThread(new File("root"), queue);
+    }
 
-  public void start() {
-    producer.start();
-    consumer.start();
-  }
+    public void start() {
+        producer.start();
+        consumer.start();
+    }
 
-  public void stop() {
-    producer.interrupt();
-  }
+    public void stop() {
+        producer.interrupt();
+    }
 
-  public void awaitTermination() throws InterruptedException {
-    consumer.join();
-  }
+    public void awaitTermination() throws InterruptedException {
+        consumer.join();
+    }
 }

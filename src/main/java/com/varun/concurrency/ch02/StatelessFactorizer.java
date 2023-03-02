@@ -1,11 +1,10 @@
 package com.varun.concurrency.ch02;
 
-import static com.varun.concurrency.Helper.encodeIntoResponse;
-import static com.varun.concurrency.Helper.extractFromRequest;
-import static com.varun.concurrency.Helper.factor;
+import net.jcip.annotations.ThreadSafe;
 
 import java.math.BigInteger;
-import net.jcip.annotations.ThreadSafe;
+
+import static com.varun.concurrency.Helper.*;
 
 /*
  * This class is thread-safe as the method doesn't access any class specific state
@@ -13,9 +12,9 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public class StatelessFactorizer {
 
-  public void service(String request, String response) {
-    BigInteger i = extractFromRequest(request);
-    BigInteger[] factors = factor(i);
-    encodeIntoResponse(response, factors);
-  }
+    public void service(String request, String response) {
+        BigInteger i = extractFromRequest(request);
+        BigInteger[] factors = factor(i);
+        encodeIntoResponse(response, factors);
+    }
 }

@@ -23,24 +23,24 @@ import static com.varun.concurrency.Helper.handleRequest;
  * Once a shutdown() is called, the executor service goes into shutting down state after which it is terminated.
  * */
 public class LifecycleWebServer {
-  private static final int NTHREADS = 100;
-  private static final ExecutorService executor = Executors.newFixedThreadPool(NTHREADS);
+    private static final int NTHREADS = 100;
+    private static final ExecutorService executor = Executors.newFixedThreadPool(NTHREADS);
 
-  public void start() throws IOException {
-    ServerSocket socket = new ServerSocket(80);
-    while (!executor.isShutdown()) {
-      try {
-        final Socket connection = socket.accept();
-        executor.execute(() -> handleRequest(connection));
-      } catch (RejectedExecutionException e) {
-        if (!executor.isShutdown()) {
-          System.out.println("Task submission rejected " + e);
+    public void start() throws IOException {
+        ServerSocket socket = new ServerSocket(80);
+        while (!executor.isShutdown()) {
+            try {
+                final Socket connection = socket.accept();
+                executor.execute(() -> handleRequest(connection));
+            } catch (RejectedExecutionException e) {
+                if (!executor.isShutdown()) {
+                    System.out.println("Task submission rejected " + e);
+                }
+            }
         }
-      }
     }
-  }
 
-  public void stop() {
-    executor.shutdown();
-  }
+    public void stop() {
+        executor.shutdown();
+    }
 }

@@ -13,32 +13,32 @@ import java.util.concurrent.Semaphore;
  * another thread releases the semaphore.
  * */
 public class BoundedHashSet<T> {
-  private final Set<T> set;
-  private final Semaphore semaphore;
+    private final Set<T> set;
+    private final Semaphore semaphore;
 
-  public BoundedHashSet(int bound) {
-    this.set = Collections.synchronizedSet(new HashSet<>());
-    this.semaphore = new Semaphore(bound);
-  }
-
-  public boolean add(T o) throws InterruptedException {
-    this.semaphore.acquire();
-    boolean wasAdded = false;
-    try {
-      wasAdded = this.set.add(o);
-      return wasAdded;
-    } finally {
-      if (!wasAdded) {
-        this.semaphore.release();
-      }
+    public BoundedHashSet(int bound) {
+        this.set = Collections.synchronizedSet(new HashSet<>());
+        this.semaphore = new Semaphore(bound);
     }
-  }
 
-  public boolean remove(T o) {
-    boolean wasRemoved = this.set.remove(o);
-    if (!wasRemoved) {
-      this.semaphore.release();
+    public boolean add(T o) throws InterruptedException {
+        this.semaphore.acquire();
+        boolean wasAdded = false;
+        try {
+            wasAdded = this.set.add(o);
+            return wasAdded;
+        } finally {
+            if (!wasAdded) {
+                this.semaphore.release();
+            }
+        }
     }
-    return wasRemoved;
-  }
+
+    public boolean remove(T o) {
+        boolean wasRemoved = this.set.remove(o);
+        if (!wasRemoved) {
+            this.semaphore.release();
+        }
+        return wasRemoved;
+    }
 }

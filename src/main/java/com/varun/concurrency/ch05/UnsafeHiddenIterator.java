@@ -1,10 +1,11 @@
 package com.varun.concurrency.ch05;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.NotThreadSafe;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import net.jcip.annotations.GuardedBy;
-import net.jcip.annotations.NotThreadSafe;
 
 /*
  * Call to UnsafeHiddenIterator() can result in ConcurrentModificationException as the print statement invokes the
@@ -17,22 +18,22 @@ import net.jcip.annotations.NotThreadSafe;
  * */
 @NotThreadSafe
 public class UnsafeHiddenIterator {
-  @GuardedBy("this")
-  private final Set<Integer> set = new HashSet<>();
+    @GuardedBy("this")
+    private final Set<Integer> set = new HashSet<>();
 
-  public void addTenThings() {
-    Random random = new Random();
-    for (int i = 0; i < 10; i++) {
-      add(random.nextInt());
+    public void addTenThings() {
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            add(random.nextInt());
+        }
+        System.out.println("Added ten elements to " + this.set);
     }
-    System.out.println("Added ten elements to " + this.set);
-  }
 
-  public synchronized void add(Integer i) {
-    set.add(i);
-  }
+    public synchronized void add(Integer i) {
+        set.add(i);
+    }
 
-  public synchronized void remove(Integer i) {
-    set.remove(i);
-  }
+    public synchronized void remove(Integer i) {
+        set.remove(i);
+    }
 }

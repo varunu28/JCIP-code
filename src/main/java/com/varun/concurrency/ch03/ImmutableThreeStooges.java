@@ -1,8 +1,9 @@
 package com.varun.concurrency.ch03;
 
+import net.jcip.annotations.Immutable;
+
 import java.util.HashSet;
 import java.util.Set;
-import net.jcip.annotations.Immutable;
 
 /*
  * Set data structure that stores the state of class is immutable and there is no way to modify
@@ -15,15 +16,15 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public final class ImmutableThreeStooges {
 
-  private final Set<String> stooges = new HashSet<>();
+    private final Set<String> stooges = new HashSet<>();
 
-  public ImmutableThreeStooges() {
-    stooges.add("John");
-    stooges.add("Jim");
-    stooges.add("Jerry");
-  }
+    public ImmutableThreeStooges() {
+        stooges.add("John");
+        stooges.add("Jim");
+        stooges.add("Jerry");
+    }
 
-  public boolean isStooge(String name) {
-    return this.stooges.contains(name);
-  }
+    public boolean isStooge(String name) {
+        return this.stooges.contains(name);
+    }
 }

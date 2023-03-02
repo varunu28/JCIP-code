@@ -14,40 +14,40 @@ import java.util.concurrent.LinkedBlockingDeque;
  * cancelling them becomes complicated.
  * */
 public class LogWriter {
-  private final BlockingQueue<String> queue;
-  private final LoggerThread logger;
-  private final Integer CAPACITY = 3;
+    private final BlockingQueue<String> queue;
+    private final LoggerThread logger;
+    private final Integer CAPACITY = 3;
 
-  public LogWriter(PrintWriter writer) {
-    this.queue = new LinkedBlockingDeque<>(CAPACITY);
-    this.logger = new LoggerThread(writer);
-  }
-
-  public void start() {
-    logger.start();
-  }
-
-  public void log(String message) throws InterruptedException {
-    queue.put(message);
-  }
-
-  private class LoggerThread extends Thread {
-    private final PrintWriter writer;
-
-    LoggerThread(PrintWriter writer) {
-      this.writer = writer;
+    public LogWriter(PrintWriter writer) {
+        this.queue = new LinkedBlockingDeque<>(CAPACITY);
+        this.logger = new LoggerThread(writer);
     }
 
-    public void run() {
-      try {
-        while (true) {
-          writer.println(queue.take());
+    public void start() {
+        logger.start();
+    }
+
+    public void log(String message) throws InterruptedException {
+        queue.put(message);
+    }
+
+    private class LoggerThread extends Thread {
+        private final PrintWriter writer;
+
+        LoggerThread(PrintWriter writer) {
+            this.writer = writer;
         }
-      } catch (InterruptedException e) {
 
-      } finally {
-        writer.close();
-      }
+        public void run() {
+            try {
+                while (true) {
+                    writer.println(queue.take());
+                }
+            } catch (InterruptedException e) {
+
+            } finally {
+                writer.close();
+            }
+        }
     }
-  }
 }

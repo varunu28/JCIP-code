@@ -1,11 +1,10 @@
 package com.varun.concurrency.ch03;
 
-import static com.varun.concurrency.Helper.encodeIntoResponse;
-import static com.varun.concurrency.Helper.extractFromRequest;
-import static com.varun.concurrency.Helper.factor;
+import net.jcip.annotations.ThreadSafe;
 
 import java.math.BigInteger;
-import net.jcip.annotations.ThreadSafe;
+
+import static com.varun.concurrency.Helper.*;
 
 /*
  * As the cache is marked as volatile, whenever a thread updates the cache field it gets visible to
@@ -15,15 +14,15 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public class VolatileCachedFactorizer {
 
-  private volatile OneValueCache cache = new OneValueCache(null, null);
+    private volatile OneValueCache cache = new OneValueCache(null, null);
 
-  public void service(String request, String response) {
-    BigInteger i = extractFromRequest(request);
-    BigInteger[] factors = cache.getFactors(i);
-    if (factors == null) {
-      factors = factor(i);
-      cache = new OneValueCache(i, factors);
+    public void service(String request, String response) {
+        BigInteger i = extractFromRequest(request);
+        BigInteger[] factors = cache.getFactors(i);
+        if (factors == null) {
+            factors = factor(i);
+            cache = new OneValueCache(i, factors);
+        }
+        encodeIntoResponse(response, factors);
     }
-    encodeIntoResponse(response, factors);
-  }
 }

@@ -1,10 +1,11 @@
 package com.varun.concurrency.ch04;
 
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import net.jcip.annotations.ThreadSafe;
 
 /*
  * PublishingVehicleTracker is thread-safe as it leverages ConcurrentHashMap for ensuring that
@@ -16,24 +17,24 @@ import net.jcip.annotations.ThreadSafe;
  * */
 @ThreadSafe
 public class PublishingVehicleTracker {
-  private final ConcurrentMap<String, ThreadSafePoint> locations;
+    private final ConcurrentMap<String, ThreadSafePoint> locations;
 
-  public PublishingVehicleTracker(Map<String, ThreadSafePoint> locations) {
-    this.locations = new ConcurrentHashMap<>(locations);
-  }
-
-  public Map<String, ThreadSafePoint> getLocations() {
-    return Collections.unmodifiableMap(this.locations);
-  }
-
-  public ThreadSafePoint getLocation(String id) {
-    return this.locations.get(id);
-  }
-
-  public void setLocation(String id, int x, int y) {
-    if (!this.locations.containsKey(id)) {
-      throw new IllegalArgumentException("No such ID: " + id);
+    public PublishingVehicleTracker(Map<String, ThreadSafePoint> locations) {
+        this.locations = new ConcurrentHashMap<>(locations);
     }
-    this.locations.get(id).set(x, y);
-  }
+
+    public Map<String, ThreadSafePoint> getLocations() {
+        return Collections.unmodifiableMap(this.locations);
+    }
+
+    public ThreadSafePoint getLocation(String id) {
+        return this.locations.get(id);
+    }
+
+    public void setLocation(String id, int x, int y) {
+        if (!this.locations.containsKey(id)) {
+            throw new IllegalArgumentException("No such ID: " + id);
+        }
+        this.locations.get(id).set(x, y);
+    }
 }

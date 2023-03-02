@@ -17,18 +17,20 @@ import java.util.concurrent.ExecutionException;
  *  computation while other threads wait for the computation to finish.
  * */
 public class MemoizerTwo<A, V> implements Computable<A, V> {
-  private final Map<A, V> cache = new ConcurrentHashMap<>();
-  private final Computable<A, V> c;
+    private final Map<A, V> cache = new ConcurrentHashMap<>();
+    private final Computable<A, V> c;
 
-  public MemoizerTwo(Computable<A, V> c) {this.c = c;}
-
-  @Override
-  public V compute(A arg) throws InterruptedException, ExecutionException {
-    V result = this.cache.get(arg);
-    if (result == null) {
-      result = this.c.compute(arg);
-      this.cache.put(arg, result);
+    public MemoizerTwo(Computable<A, V> c) {
+        this.c = c;
     }
-    return result;
-  }
+
+    @Override
+    public V compute(A arg) throws InterruptedException, ExecutionException {
+        V result = this.cache.get(arg);
+        if (result == null) {
+            result = this.c.compute(arg);
+            this.cache.put(arg, result);
+        }
+        return result;
+    }
 }

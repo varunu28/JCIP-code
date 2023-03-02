@@ -27,39 +27,39 @@ import java.util.concurrent.CountDownLatch;
  * */
 public class TestHarness {
 
-  public static void main(String[] args) throws InterruptedException {
-    System.out.println(new TestHarness().timeTasks(4, () -> {
-      double count = 0;
-      for (int i = 0; i < 100; i++) {
-        count += Math.sqrt(i);
-      }
-      System.out.println(count);
-    }));
-  }
-
-  public long timeTasks(int nThreads, Runnable task) throws InterruptedException {
-    final CountDownLatch startGate = new CountDownLatch(1);
-    final CountDownLatch endGate = new CountDownLatch(nThreads);
-
-    for (int i = 0; i < nThreads; i++) {
-      Thread t = new Thread(() -> {
-        try {
-          startGate.await();
-          try {
-            task.run();
-          } finally {
-            endGate.countDown();
-          }
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      });
-      t.start();
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println(new TestHarness().timeTasks(4, () -> {
+            double count = 0;
+            for (int i = 0; i < 100; i++) {
+                count += Math.sqrt(i);
+            }
+            System.out.println(count);
+        }));
     }
-    long startTime = System.nanoTime();
-    startGate.countDown();
-    endGate.await();
-    long endTime = System.nanoTime();
-    return endTime - startTime;
-  }
+
+    public long timeTasks(int nThreads, Runnable task) throws InterruptedException {
+        final CountDownLatch startGate = new CountDownLatch(1);
+        final CountDownLatch endGate = new CountDownLatch(nThreads);
+
+        for (int i = 0; i < nThreads; i++) {
+            Thread t = new Thread(() -> {
+                try {
+                    startGate.await();
+                    try {
+                        task.run();
+                    } finally {
+                        endGate.countDown();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            t.start();
+        }
+        long startTime = System.nanoTime();
+        startGate.countDown();
+        endGate.await();
+        long endTime = System.nanoTime();
+        return endTime - startTime;
+    }
 }

@@ -1,11 +1,7 @@
 package com.varun.concurrency.ch05.cache;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 import static com.varun.concurrency.Helper.launderThrowable;
 
@@ -22,25 +18,27 @@ import static com.varun.concurrency.Helper.launderThrowable;
  * future is not removed from cache. This is known as cache pollution.
  * */
 public class MemoizerThree<A, V> implements Computable<A, V> {
-  private final Map<A, Future<V>> cache = new ConcurrentHashMap<>();
-  private final Computable<A, V> c;
+    private final Map<A, Future<V>> cache = new ConcurrentHashMap<>();
+    private final Computable<A, V> c;
 
-  public MemoizerThree(Computable<A, V> c) {this.c = c;}
+    public MemoizerThree(Computable<A, V> c) {
+        this.c = c;
+    }
 
-  @Override
-  public V compute(A arg) throws InterruptedException, ExecutionException {
-    Future<V> future = this.cache.get(arg);
-    if (future == null) {
-      Callable<V> eval = () -> c.compute(arg);
-      FutureTask<V> futureTask = new FutureTask<>(eval);
-      future = futureTask;
-      this.cache.put(arg, futureTask);
-      futureTask.run();
+    @Override
+    public V compute(A arg) throws InterruptedException, ExecutionException {
+        Future<V> future = this.cache.get(arg);
+        if (future == null) {
+            Callable<V> eval = () -> c.compute(arg);
+            FutureTask<V> futureTask = new FutureTask<>(eval);
+            future = futureTask;
+            this.cache.put(arg, futureTask);
+            futureTask.run();
+        }
+        try {
+            return future.get();
+        } catch (ExecutionException e) {
+            throw launderThrowable(e.getCause());
+        }
     }
-    try {
-      return future.get();
-    } catch (ExecutionException e) {
-      throw launderThrowable(e.getCause());
-    }
-  }
 }

@@ -1,11 +1,12 @@
 package com.varun.concurrency.ch04;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import net.jcip.annotations.GuardedBy;
-import net.jcip.annotations.ThreadSafe;
 
 /*
  * MonitorVehicleTracker is thread safe as we use monitor pattern to acquire locks for all methods
@@ -16,36 +17,36 @@ import net.jcip.annotations.ThreadSafe;
  * */
 @ThreadSafe
 public class MonitorVehicleTracker {
-  @GuardedBy("this")
-  private final Map<String, MutablePoint> locations;
+    @GuardedBy("this")
+    private final Map<String, MutablePoint> locations;
 
-  public MonitorVehicleTracker(Map<String, MutablePoint> locations) {
-    this.locations = deepCopy(locations);
-  }
-
-  private static Map<String, MutablePoint> deepCopy(Map<String, MutablePoint> m) {
-    Map<String, MutablePoint> result = new HashMap<>();
-    for (String id : m.keySet()) {
-      result.put(id, new MutablePoint(m.get(id)));
+    public MonitorVehicleTracker(Map<String, MutablePoint> locations) {
+        this.locations = deepCopy(locations);
     }
-    return Collections.unmodifiableMap(result);
-  }
 
-  public synchronized Map<String, MutablePoint> getLocations() {
-    return deepCopy(this.locations);
-  }
-
-  public synchronized Optional<MutablePoint> getLocation(String id) {
-    MutablePoint loc = this.locations.get(id);
-    return Optional.of(loc == null ? null : new MutablePoint(loc));
-  }
-
-  public synchronized void setLocation(String id, int x, int y) {
-    MutablePoint loc = this.locations.get(id);
-    if (loc == null) {
-      throw new IllegalArgumentException("No such ID: " + id);
+    private static Map<String, MutablePoint> deepCopy(Map<String, MutablePoint> m) {
+        Map<String, MutablePoint> result = new HashMap<>();
+        for (String id : m.keySet()) {
+            result.put(id, new MutablePoint(m.get(id)));
+        }
+        return Collections.unmodifiableMap(result);
     }
-    loc.x = x;
-    loc.y = y;
-  }
+
+    public synchronized Map<String, MutablePoint> getLocations() {
+        return deepCopy(this.locations);
+    }
+
+    public synchronized Optional<MutablePoint> getLocation(String id) {
+        MutablePoint loc = this.locations.get(id);
+        return Optional.of(loc == null ? null : new MutablePoint(loc));
+    }
+
+    public synchronized void setLocation(String id, int x, int y) {
+        MutablePoint loc = this.locations.get(id);
+        if (loc == null) {
+            throw new IllegalArgumentException("No such ID: " + id);
+        }
+        loc.x = x;
+        loc.y = y;
+    }
 }

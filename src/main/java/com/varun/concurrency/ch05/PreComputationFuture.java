@@ -16,25 +16,25 @@ import static com.varun.concurrency.Helper.launderThrowable;
  * yield result if the computation has finished or will block the calling thread until it finishes computation.
  * */
 public class PreComputationFuture {
-  private final FutureTask<Integer> futureTask = new FutureTask<>(() -> {
-    Integer result = 0;
-    for (int i = 0; i < 1000; i++) {
-      result += (int) Math.sqrt(i);
-    }
-    return result;
-  });
-  private final Thread thread = new Thread(futureTask);
+    private final FutureTask<Integer> futureTask = new FutureTask<>(() -> {
+        Integer result = 0;
+        for (int i = 0; i < 1000; i++) {
+            result += (int) Math.sqrt(i);
+        }
+        return result;
+    });
+    private final Thread thread = new Thread(futureTask);
 
-  public void start() {
-    thread.start();
-  }
-
-  public Integer get() throws InterruptedException {
-    try {
-      return futureTask.get();
-    } catch (ExecutionException e) {
-      Throwable cause = e.getCause();
-      throw launderThrowable(cause);
+    public void start() {
+        thread.start();
     }
-  }
+
+    public Integer get() throws InterruptedException {
+        try {
+            return futureTask.get();
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            throw launderThrowable(cause);
+        }
+    }
 }

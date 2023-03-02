@@ -1,7 +1,8 @@
 package com.varun.concurrency.ch04;
 
-import java.util.Vector;
 import net.jcip.annotations.ThreadSafe;
+
+import java.util.Vector;
 
 /*
  * Cases where a thread-safe class fulfils our majority of the requirement, we can extend the class
@@ -15,11 +16,11 @@ import net.jcip.annotations.ThreadSafe;
  * */
 @ThreadSafe
 public class BetterVectorByExtention<E> extends Vector<E> {
-  public synchronized boolean putIfAbsent(E x) {
-    boolean absent = !contains(x);
-    if (absent) {
-      add(x);
+    public synchronized boolean putIfAbsent(E x) {
+        boolean absent = !contains(x);
+        if (absent) {
+            add(x);
+        }
+        return absent;
     }
-    return absent;
-  }
 }

@@ -13,40 +13,40 @@ import java.util.concurrent.LinkedBlockingDeque;
  * For such cases thread interruption can be used to cancel tasks by leveraging isInterrupted() method of thread class.
  * */
 public class BrokenPrimeProducer extends Thread {
-  private final BlockingQueue<BigInteger> queue;
-  private volatile boolean cancelled = false;
+    private final BlockingQueue<BigInteger> queue;
+    private volatile boolean cancelled = false;
 
-  BrokenPrimeProducer(BlockingQueue<BigInteger> queue) {
-    this.queue = queue;
-  }
-
-  public void run() {
-    try {
-      BigInteger p = BigInteger.ONE;
-      while (!cancelled) {
-        queue.put(p = p.nextProbablePrime());
-      }
-    } catch (InterruptedException e) {
+    BrokenPrimeProducer(BlockingQueue<BigInteger> queue) {
+        this.queue = queue;
     }
-  }
 
-  public void cancel() {
-    cancelled = true;
-  }
+    public void run() {
+        try {
+            BigInteger p = BigInteger.ONE;
+            while (!cancelled) {
+                queue.put(p = p.nextProbablePrime());
+            }
+        } catch (InterruptedException e) {
+        }
+    }
+
+    public void cancel() {
+        cancelled = true;
+    }
 }
 
 class BrokenPrimeProducerDemo {
 
-  void consumePrimes() throws InterruptedException {
-    BlockingQueue<BigInteger> primes = new LinkedBlockingDeque<>();
-    BrokenPrimeProducer producer = new BrokenPrimeProducer(primes);
-    producer.start();
-    try {
-      while (true) {
-        System.out.println(primes.take());
-      }
-    } finally {
-      producer.cancel();
+    void consumePrimes() throws InterruptedException {
+        BlockingQueue<BigInteger> primes = new LinkedBlockingDeque<>();
+        BrokenPrimeProducer producer = new BrokenPrimeProducer(primes);
+        producer.start();
+        try {
+            while (true) {
+                System.out.println(primes.take());
+            }
+        } finally {
+            producer.cancel();
+        }
     }
-  }
 }

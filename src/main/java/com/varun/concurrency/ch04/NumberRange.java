@@ -1,7 +1,8 @@
 package com.varun.concurrency.ch04;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import net.jcip.annotations.NotThreadSafe;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
  * In NumberRange even though we have delegated the thread safety to AtomicInteger, NumberRange class
@@ -22,25 +23,25 @@ import net.jcip.annotations.NotThreadSafe;
 @NotThreadSafe
 public class NumberRange {
 
-  // IMPORTANT lower <= upper
-  private final AtomicInteger lower = new AtomicInteger(0);
-  private final AtomicInteger upper = new AtomicInteger(0);
+    // IMPORTANT lower <= upper
+    private final AtomicInteger lower = new AtomicInteger(0);
+    private final AtomicInteger upper = new AtomicInteger(0);
 
-  public void setLower(int i) {
-    if (i > upper.get()) {
-      throw new IllegalArgumentException("Can't set lower to " + i + " > upper");
+    public void setLower(int i) {
+        if (i > upper.get()) {
+            throw new IllegalArgumentException("Can't set lower to " + i + " > upper");
+        }
+        lower.set(i);
     }
-    lower.set(i);
-  }
 
-  public void setUpper(int i) {
-    if (i < lower.get()) {
-      throw new IllegalArgumentException("Can't set upper to " + i + " < lower");
+    public void setUpper(int i) {
+        if (i < lower.get()) {
+            throw new IllegalArgumentException("Can't set upper to " + i + " < lower");
+        }
+        upper.set(i);
     }
-    upper.set(i);
-  }
 
-  public boolean isInRange(int i) {
-    return i >= lower.get() && i <= upper.get();
-  }
+    public boolean isInRange(int i) {
+        return i >= lower.get() && i <= upper.get();
+    }
 }

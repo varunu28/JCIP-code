@@ -12,15 +12,15 @@ package com.varun.concurrency.ch03;
  * */
 public class WhenToVolatile {
 
-  private volatile boolean awake;
+    private volatile boolean awake;
 
-  public void service() {
-    while (!awake) {
-      System.out.println("I am sleeping");
+    public void service() {
+        while (!awake) {
+            System.out.println("I am sleeping");
+        }
     }
-  }
 
-  public void setAwake(boolean awake) {
-    this.awake = awake;
-  }
+    public void setAwake(boolean awake) {
+        this.awake = awake;
+    }
 }

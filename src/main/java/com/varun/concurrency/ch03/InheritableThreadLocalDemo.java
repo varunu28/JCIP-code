@@ -8,27 +8,27 @@ package com.varun.concurrency.ch03;
  * */
 public class InheritableThreadLocalDemo {
 
-  public static void main(String[] args) {
-    ThreadLocal<String> threadLocal = new ThreadLocal<>();
-    InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<>();
+    public static void main(String[] args) {
+        ThreadLocal<String> threadLocal = new ThreadLocal<>();
+        InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<>();
 
-    new Thread(
-            () -> {
-              System.out.println("In parent thread");
-              threadLocal.set("Parent thread: ThreadLocal");
-              inheritableThreadLocal.set("Parent thread: InheritableThreadLocal");
+        new Thread(
+                () -> {
+                    System.out.println("In parent thread");
+                    threadLocal.set("Parent thread: ThreadLocal");
+                    inheritableThreadLocal.set("Parent thread: InheritableThreadLocal");
 
-              System.out.println(threadLocal.get());
-              System.out.println(inheritableThreadLocal.get());
+                    System.out.println(threadLocal.get());
+                    System.out.println(inheritableThreadLocal.get());
 
-              new Thread(
-                      () -> {
-                        System.out.println("In child thread");
-                        System.out.println(threadLocal.get());
-                        System.out.println(inheritableThreadLocal.get());
-                      })
-                  .start();
-            })
-        .start();
-  }
+                    new Thread(
+                            () -> {
+                                System.out.println("In child thread");
+                                System.out.println(threadLocal.get());
+                                System.out.println(inheritableThreadLocal.get());
+                            })
+                            .start();
+                })
+                .start();
+    }
 }

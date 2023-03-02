@@ -12,11 +12,11 @@ import static com.varun.concurrency.Helper.handleRequest;
  *  has finished.
  * */
 public class SingleThreadedWebServer {
-  public static void main(String[] args) throws IOException {
-    ServerSocket socket = new ServerSocket(80);
-    while (true) {
-      Socket connection = socket.accept();
-      handleRequest(connection);
+    public static void main(String[] args) throws IOException {
+        ServerSocket socket = new ServerSocket(80);
+        while (true) {
+            Socket connection = socket.accept();
+            handleRequest(connection);
+        }
     }
-  }
 }

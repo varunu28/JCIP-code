@@ -24,12 +24,12 @@ import static com.varun.concurrency.Helper.handleRequest;
  * reached, we will see an OutOfMemoryError which is difficult to handle.
  * */
 public class ThreadPerTaskWebServer {
-  public static void main(String[] args) throws IOException {
-    ServerSocket socket = new ServerSocket(80);
-    while (true) {
-      final Socket connection = socket.accept();
-      Runnable task = () -> handleRequest(connection);
-      new Thread(task).start();
+    public static void main(String[] args) throws IOException {
+        ServerSocket socket = new ServerSocket(80);
+        while (true) {
+            final Socket connection = socket.accept();
+            Runnable task = () -> handleRequest(connection);
+            new Thread(task).start();
+        }
     }
-  }
 }
