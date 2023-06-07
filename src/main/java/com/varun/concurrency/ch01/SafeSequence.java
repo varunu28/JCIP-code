@@ -9,10 +9,6 @@ public class SafeSequence implements Sequence {
     @GuardedBy("this")
     private int nextValue;
 
-    public static void main(String[] args) {
-        SequenceDemo.testSequence(new SafeSequence());
-    }
-
     public synchronized int getNext() {
         return nextValue++;
     }
